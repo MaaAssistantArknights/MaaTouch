@@ -1,4 +1,4 @@
-package com.shxyke.touchevent.wrappers;
+package com.shxyke.MaaTouch.wrappers;
 
 import android.annotation.SuppressLint;
 import android.os.IBinder;

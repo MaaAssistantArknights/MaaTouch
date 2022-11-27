@@ -1,4 +1,4 @@
-package com.shxyke.touchevent;
+package com.shxyke.MaaTouch;
 
 /**
  * Union of all supported event types, identified by their {@code type}.

@@ -1,7 +1,7 @@
-package com.shxyke.touchevent;
+package com.shxyke.MaaTouch;
 
-import com.shxyke.touchevent.wrappers.InputManager;
-import com.shxyke.touchevent.wrappers.ServiceManager;
+import com.shxyke.MaaTouch.wrappers.InputManager;
+import com.shxyke.MaaTouch.wrappers.ServiceManager;
 
 import android.os.SystemClock;
 import android.view.InputDevice;

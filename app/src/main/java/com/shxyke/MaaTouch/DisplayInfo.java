@@ -1,4 +1,4 @@
-package com.shxyke.touchevent;
+package com.shxyke.MaaTouch;
 
 public final class DisplayInfo {
     private final int displayId;

@@ -1,7 +1,7 @@
-package com.shxyke.touchevent.wrappers;
+package com.shxyke.MaaTouch.wrappers;
 
-import com.shxyke.touchevent.DisplayInfo;
-import com.shxyke.touchevent.Size;
+import com.shxyke.MaaTouch.DisplayInfo;
+import com.shxyke.MaaTouch.Size;
 
 import android.os.IInterface;
 

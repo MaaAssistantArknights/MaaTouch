@@ -1,6 +1,6 @@
-package com.shxyke.touchevent.wrappers;
+package com.shxyke.MaaTouch.wrappers;
 
-import com.shxyke.touchevent.Ln;
+import com.shxyke.MaaTouch.Ln;
 
 import android.view.InputEvent;
 

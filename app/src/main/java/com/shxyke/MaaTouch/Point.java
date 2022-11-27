@@ -1,4 +1,4 @@
-package com.shxyke.touchevent;
+package com.shxyke.MaaTouch;
 
 import java.util.Objects;
 
