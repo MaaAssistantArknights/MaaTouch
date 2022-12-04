@@ -17,6 +17,7 @@ public class InputThread extends Thread {
 
     private static final Pattern DOWN_PATTERN = Pattern.compile("d\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
     private static final Pattern MOVE_PATTERN = Pattern.compile("m\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
+    private static final Pattern KEY_PATTERN = Pattern.compile("k\\s+(\\d+)\\s+([du])");
     private static final Pattern WAIT_PATTERN = Pattern.compile("w\\s+(\\d+)");
     private static final Pattern UP_PATTERN = Pattern.compile("u\\s+(\\d+)");
     private static final Pattern COMMIT_PATTERN = Pattern.compile("c");
@@ -29,31 +30,43 @@ public class InputThread extends Thread {
         this.queue = queue;
     }
 
-    private void parseDown(String s) {
+    private void parseKey(String s) {
+        Matcher m = KEY_PATTERN.matcher(s);
+        if (m.find()) {
+            int keycode = Integer.parseInt(m.group(1));
+            if (m.group(2).equals("u")) {
+                while (!subqueue.offer(ControlMessage.createKeyUpEvent(keycode, 0, 0)));
+            } else if (m.group(2).equals("d")) {
+                while (!subqueue.offer(ControlMessage.createKeyDownEvent(keycode, 0, 0)));
+            }
+        }
+    }
+
+    private void parseTouchDown(String s) {
         Matcher m = DOWN_PATTERN.matcher(s);
         if (m.find()) {
             long pointerId = Long.parseLong(m.group(1));
             Point point = new Point(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)));
             float pressure = Integer.parseInt(m.group(4)) / 255;
-            while (!subqueue.offer(ControlMessage.createDownEvent(pointerId, point, pressure)));
+            while (!subqueue.offer(ControlMessage.createTouchDownEvent(pointerId, point, pressure)));
         }
     }
 
-    private void parseMove(String s) {
+    private void parseTouchMove(String s) {
         Matcher m = MOVE_PATTERN.matcher(s);
         if (m.find()) {
             long pointerId = Long.parseLong(m.group(1));
             Point point = new Point(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)));
             float pressure = Integer.parseInt(m.group(4)) / 255;
-            while (!subqueue.offer(ControlMessage.createMoveEvent(pointerId, point, pressure)));
+            while (!subqueue.offer(ControlMessage.createTouchMoveEvent(pointerId, point, pressure)));
         }
     }
 
-    private void parseUp(String s) {
+    private void parseTouchUp(String s) {
         Matcher m = UP_PATTERN.matcher(s);
         if (m.find()) {
             long pointerId = Long.parseLong(m.group(1));
-            while (!subqueue.offer(ControlMessage.createUpEvent(pointerId)));
+            while (!subqueue.offer(ControlMessage.createTouchUpEvent(pointerId)));
         }
     }
 
@@ -83,11 +96,11 @@ public class InputThread extends Thread {
         }
     }
 
-    private void parseReset(String s) {
+    private void parseTouchReset(String s) {
         Matcher m = RESET_PATTERN.matcher(s);
         if (m.find()) {
             subqueue.clear();
-            while (!subqueue.offer(ControlMessage.createEmpty(ControlMessage.TYPE_EVENT_RESET)));
+            while (!subqueue.offer(ControlMessage.createEmpty(ControlMessage.TYPE_EVENT_TOUCH_RESET)));
             commitSubqueue();
         }
     }
@@ -98,19 +111,22 @@ public class InputThread extends Thread {
                 parseCommit(s);
                 break;
             case 'r':
-                parseReset(s);
+                parseTouchReset(s);
                 break;
             case 'd':
-                parseDown(s);
+                parseTouchDown(s);
                 break;
             case 'm':
-                parseMove(s);
+                parseTouchMove(s);
                 break;
             case 'u':
-                parseUp(s);
+                parseTouchUp(s);
                 break;
             case 'w':
                 parseWait(s);
+                break;
+            case 'k':
+                parseKey(s);
                 break;
             default:
                 break;

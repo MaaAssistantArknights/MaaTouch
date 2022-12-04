@@ -5,6 +5,9 @@ import com.shxyke.MaaTouch.wrappers.ServiceManager;
 
 import android.os.SystemClock;
 import android.view.InputDevice;
+import android.view.InputEvent;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public class Controller {
@@ -38,12 +41,31 @@ public class Controller {
         }
     }
 
+    private boolean injectEvent(InputEvent event, int injectMode) {
+        return serviceManager.getInputManager().injectInputEvent(event, injectMode);
+    }
+
     public void resetAll() {
         int count = pointersState.size();
         for (int i = 0; i < count; ++i) {
             Pointer pointer = pointersState.get(0);
             this.injectTouch(MotionEvent.ACTION_UP, pointer.getId(), pointer.getPoint(), 0);
         }
+    }
+
+    public boolean injectKeyDown(int keyCode, int repeat, int metaState) {
+        return injectKeyEvent(MotionEvent.ACTION_DOWN, keyCode, repeat, metaState);
+    }
+
+    public boolean injectKeyUp(int keyCode, int repeat, int metaState) {
+        return injectKeyEvent(MotionEvent.ACTION_UP, keyCode, repeat, metaState);
+    }
+
+    public boolean injectKeyEvent(int action, int keyCode, int repeat, int metaState) {
+        long now = SystemClock.uptimeMillis();
+        KeyEvent event = new KeyEvent(now, now, action, keyCode, repeat, metaState, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, 0,
+                InputDevice.SOURCE_KEYBOARD);
+        return injectEvent(event, InputManager.INJECT_MODE_ASYNC);
     }
 
     public boolean injectTouchDown(long pointerId, Point point, float pressure) {
@@ -100,6 +122,6 @@ public class Controller {
         MotionEvent event = MotionEvent
                 .obtain(lastTouchDown, now, action, pointerCount, pointerProperties, pointerCoords, 0, 0, 1f, 1f, DEFAULT_DEVICE_ID, 0,
                         DEFAULT_SOURCE, 0);
-        return serviceManager.getInputManager().injectInputEvent(event, InputManager.INJECT_MODE_ASYNC);
+        return injectEvent(event, InputManager.INJECT_MODE_ASYNC);
     }
 }

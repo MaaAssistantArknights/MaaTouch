@@ -15,17 +15,23 @@ public class ControlThread {
 
     public void handleMessage(ControlMessage msg) {
         switch (msg.getType()) {
-            case ControlMessage.TYPE_EVENT_RESET:
+            case ControlMessage.TYPE_EVENT_TOUCH_RESET:
                 controller.resetAll();
                 break;
-            case ControlMessage.TYPE_EVENT_DOWN:
+            case ControlMessage.TYPE_EVENT_TOUCH_DOWN:
                 controller.injectTouchDown(msg.getPointerId(), msg.getPoint(), msg.getPressure());
                 break;
-            case ControlMessage.TYPE_EVENT_MOVE:
+            case ControlMessage.TYPE_EVENT_TOUCH_MOVE:
                 controller.injectTouchMove(msg.getPointerId(), msg.getPoint(), msg.getPressure());
                 break;
-            case ControlMessage.TYPE_EVENT_UP:
+            case ControlMessage.TYPE_EVENT_TOUCH_UP:
                 controller.injectTouchUp(msg.getPointerId());
+                break;
+            case ControlMessage.TYPE_EVENT_KEY_DOWN:
+                controller.injectKeyDown(msg.getKeycode(), msg.getRepeat(), msg.getMetaState());
+                break;
+            case ControlMessage.TYPE_EVENT_KEY_UP:
+                controller.injectKeyUp(msg.getKeycode(), msg.getRepeat(), msg.getMetaState());
                 break;
             case ControlMessage.TYPE_EVENT_WAIT:
                 try {
