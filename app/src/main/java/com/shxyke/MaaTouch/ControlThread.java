@@ -7,6 +7,7 @@ public class ControlThread {
 
     private final LinkedBlockingQueue<Queue<ControlMessage>> queue;
     private final Controller controller;
+    private long expectedNow = 0; // 理想当前时间
 
     public ControlThread(LinkedBlockingQueue<Queue<ControlMessage>> queue, Controller controller) {
         this.queue = queue;
@@ -35,10 +36,20 @@ public class ControlThread {
                 break;
             case ControlMessage.TYPE_EVENT_WAIT:
                 try {
-                    Thread.sleep(msg.getMillis());
+                    expectedNow += msg.getMillis();
+                    long timeToWait = expectedNow - System.currentTimeMillis();
+                    if (timeToWait > 0) {
+                        Thread.sleep(timeToWait);
+                    }
+                    else {
+                        expectedNow -= timeToWait;
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                break;
+            case ControlMessage.TYPE_EVENT_WAIT_TIMESTAMP_SYNC:
+                expectedNow = msg.getMillis();
                 break;
             default:
                 break;
