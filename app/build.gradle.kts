@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId = "com.shxyke.MaaTouch"
-        minSdk = 28
-        targetSdk = 34
+        minSdk = 21
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
