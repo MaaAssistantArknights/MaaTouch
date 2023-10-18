@@ -35,7 +35,8 @@ public class ControlThread {
                 break;
             case ControlMessage.TYPE_EVENT_WAIT:
                 try {
-                    Thread.sleep(msg.getMillis());
+                    long sleepTime = msg.getTargetTimestamp() - System.currentTimeMillis();
+                    Thread.sleep(sleepTime > 0 ? sleepTime : 0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

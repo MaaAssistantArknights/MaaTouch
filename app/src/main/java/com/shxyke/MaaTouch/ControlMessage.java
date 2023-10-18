@@ -17,7 +17,7 @@ public final class ControlMessage {
     private long pointerId;
     private float pressure;
     private Point point;
-    private long millis;
+    private long targetTimestamp;
     private int keycode;
     private int repeat;
     private int metaState;
@@ -66,7 +66,7 @@ public final class ControlMessage {
 
     public static ControlMessage createWaitEvent(long milis) {
         ControlMessage msg = new ControlMessage(TYPE_EVENT_WAIT);
-        msg.millis = milis;
+        msg.targetTimestamp = milis + System.currentTimeMillis();
         return msg;
     }
 
@@ -92,8 +92,8 @@ public final class ControlMessage {
         return point;
     }
 
-    public long getMillis() {
-        return millis;
+    public long getTargetTimestamp() {
+        return targetTimestamp;
     }
 
     public int getMetaState() {
