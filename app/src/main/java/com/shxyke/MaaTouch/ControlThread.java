@@ -18,6 +18,7 @@ public class ControlThread {
         switch (msg.getType()) {
             case ControlMessage.TYPE_EVENT_TOUCH_RESET:
                 controller.resetAll();
+                expectedNow = System.currentTimeMillis();
                 break;
             case ControlMessage.TYPE_EVENT_TOUCH_DOWN:
                 controller.injectTouchDown(msg.getPointerId(), msg.getPoint(), msg.getPressure());
@@ -49,7 +50,8 @@ public class ControlThread {
                 }
                 break;
             case ControlMessage.TYPE_EVENT_WAIT_TIMESTAMP_SYNC:
-                expectedNow = msg.getMillis();
+                if (expectedNow < msg.getMillis())
+                    expectedNow = msg.getMillis();
                 break;
             default:
                 break;
