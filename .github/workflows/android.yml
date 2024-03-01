@@ -10,7 +10,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          show-progress: false
 
       - name: set up JDK 17
         uses: actions/setup-java@v3
@@ -29,7 +31,7 @@ jobs:
         run: cp ./app/build/outputs/apk/release/app-release-unsigned.apk ./maatouch
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: maatouch
           path: ./maatouch
