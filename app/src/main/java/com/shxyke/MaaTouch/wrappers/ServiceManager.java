@@ -1,6 +1,7 @@
 package com.shxyke.MaaTouch.wrappers;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.IInterface;
 
@@ -46,10 +47,15 @@ public final class ServiceManager {
     public InputManager getInputManager() {
         if (inputManager == null) {
             try {
-                Method getInstanceMethod = android.hardware.input.InputManager.class.getDeclaredMethod("getInstance");
-                android.hardware.input.InputManager im = (android.hardware.input.InputManager) getInstanceMethod.invoke(null);
+                Method getInstanceMethod;
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    getInstanceMethod = Class.forName("android.hardware.input.InputManagerGlobal").getMethod("getInstance");
+                } else {
+                    getInstanceMethod = android.hardware.input.InputManager.class.getDeclaredMethod("getInstance");
+                }
+                Object im = getInstanceMethod.invoke(null);
                 inputManager = new InputManager(im);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
                 throw new AssertionError(e);
             }
