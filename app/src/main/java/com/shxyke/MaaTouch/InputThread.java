@@ -22,6 +22,7 @@ public class InputThread extends Thread {
     private static final Pattern UP_PATTERN = Pattern.compile("u\\s+(\\d+)");
     private static final Pattern COMMIT_PATTERN = Pattern.compile("c");
     private static final Pattern RESET_PATTERN = Pattern.compile("r");
+    private static final Pattern TEXT_PATTERN = Pattern.compile("t\\s+(.+)");
 
     private Queue<ControlMessage> subqueue = new LinkedList<>();
 
@@ -104,6 +105,13 @@ public class InputThread extends Thread {
             commitSubqueue();
         }
     }
+    private void parseText(String s) {
+        Matcher m = TEXT_PATTERN.matcher(s);
+        if (m.find()) {
+            String text = m.group(1);
+            while (!subqueue.offer(ControlMessage.createTextEvent(text)));
+        }
+    }
 
     private void parseInput(String s) {
         switch (s.charAt(0)) {
@@ -127,6 +135,9 @@ public class InputThread extends Thread {
                 break;
             case 'k':
                 parseKey(s);
+                break;
+            case 't':
+                parseText(s);
                 break;
             default:
                 break;

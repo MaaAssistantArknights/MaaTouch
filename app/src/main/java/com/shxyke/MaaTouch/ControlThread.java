@@ -33,6 +33,9 @@ public class ControlThread {
             case ControlMessage.TYPE_EVENT_KEY_UP:
                 controller.injectKeyUp(msg.getKeycode(), msg.getRepeat(), msg.getMetaState());
                 break;
+            case ControlMessage.TYPE_EVENT_TEXT:
+                controller.setClipboard(msg.getText());
+                break;
             case ControlMessage.TYPE_EVENT_WAIT:
                 try {
                     Thread.sleep(msg.getMillis());

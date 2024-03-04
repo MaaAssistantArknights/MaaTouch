@@ -12,6 +12,7 @@ public final class ControlMessage {
     public static final int TYPE_EVENT_TOUCH_RESET = 4;
     public static final int TYPE_EVENT_KEY_DOWN = 5;
     public static final int TYPE_EVENT_KEY_UP = 6;
+    public static final int TYPE_EVENT_TEXT = 7;
 
     private int type;
     private long pointerId;
@@ -21,11 +22,17 @@ public final class ControlMessage {
     private int keycode;
     private int repeat;
     private int metaState;
+    private String text;
 
     private ControlMessage(int type) {
         this.type = type;
     }
 
+    public static ControlMessage createTextEvent(String text) {
+        ControlMessage msg = new ControlMessage(TYPE_EVENT_TEXT);
+        msg.text = text;
+        return msg;
+    }
     public static ControlMessage createKeyDownEvent(int keycode, int repeat, int metaState) {
         ControlMessage msg = new ControlMessage(TYPE_EVENT_KEY_DOWN);
         msg.keycode = keycode;
@@ -102,6 +109,9 @@ public final class ControlMessage {
 
     public int getKeycode() {
         return keycode;
+    }
+    public String getText() {
+        return text;
     }
 
     public int getRepeat() {

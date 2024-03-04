@@ -18,6 +18,7 @@ public final class ServiceManager {
 
     private DisplayManager displayManager;
     private InputManager inputManager;
+    private ClipboardManager clipboardManager;
 
     public ServiceManager() {
         try {
@@ -61,5 +62,15 @@ public final class ServiceManager {
             }
         }
         return inputManager;
+    }
+    public ClipboardManager getClipboardManager() {
+        if (clipboardManager == null) {
+            IInterface clipboard = getService("clipboard", "android.content.IClipboard");
+            if (clipboard == null) {
+                return null;
+            }
+            clipboardManager = new ClipboardManager(clipboard);
+        }
+        return clipboardManager;
     }
 }
