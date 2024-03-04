@@ -1,5 +1,6 @@
 package com.shxyke.MaaTouch;
 
+import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -7,10 +8,30 @@ public class ControlThread {
 
     private final LinkedBlockingQueue<Queue<ControlMessage>> queue;
     private final Controller controller;
+    private final HashMap<Integer,KeyThread> KeyThreads;
 
     public ControlThread(LinkedBlockingQueue<Queue<ControlMessage>> queue, Controller controller) {
         this.queue = queue;
         this.controller = controller;
+        KeyThreads = new HashMap<>();
+    }
+    public void KeyDown(int key)
+    {
+        if(!KeyThreads.containsKey(key))
+        {
+            KeyThread thread = new KeyThread(this.controller,key);
+            thread.start();
+            KeyThreads.put(key,thread);
+        }
+    }
+    public void KeyUp(int key)
+    {
+        if(KeyThreads.containsKey(key))
+        {
+            KeyThread thread = KeyThreads.get(key);
+            thread.stopThread();
+            KeyThreads.remove(key);
+        }
     }
 
     public void handleMessage(ControlMessage msg) {
@@ -28,10 +49,13 @@ public class ControlThread {
                 controller.injectTouchUp(msg.getPointerId());
                 break;
             case ControlMessage.TYPE_EVENT_KEY_DOWN:
-                controller.injectKeyDown(msg.getKeycode(), msg.getRepeat(), msg.getMetaState());
+                KeyDown(msg.getKeycode());
                 break;
             case ControlMessage.TYPE_EVENT_KEY_UP:
-                controller.injectKeyUp(msg.getKeycode(), msg.getRepeat(), msg.getMetaState());
+                KeyUp(msg.getKeycode());
+                break;
+            case ControlMessage.TYPE_EVENT_KEY:
+                controller.pressReleaseKeycode(msg.getKeycode());
                 break;
             case ControlMessage.TYPE_EVENT_TEXT:
                 controller.setClipboard(msg.getText());

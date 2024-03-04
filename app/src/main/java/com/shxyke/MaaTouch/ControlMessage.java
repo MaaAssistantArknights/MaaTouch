@@ -13,6 +13,7 @@ public final class ControlMessage {
     public static final int TYPE_EVENT_KEY_DOWN = 5;
     public static final int TYPE_EVENT_KEY_UP = 6;
     public static final int TYPE_EVENT_TEXT = 7;
+    public static final int TYPE_EVENT_KEY = 8;
 
     private int type;
     private long pointerId;
@@ -38,6 +39,13 @@ public final class ControlMessage {
         msg.keycode = keycode;
         msg.repeat = repeat;
         msg.metaState = metaState;
+        return msg;
+    }
+    public static ControlMessage createKeyEvent(int keycode) {
+        ControlMessage msg = new ControlMessage(TYPE_EVENT_KEY);
+        msg.keycode = keycode;
+        msg.repeat = 0;
+        msg.metaState = 0;
         return msg;
     }
 

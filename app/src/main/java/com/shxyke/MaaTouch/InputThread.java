@@ -17,7 +17,7 @@ public class InputThread extends Thread {
 
     private static final Pattern DOWN_PATTERN = Pattern.compile("d\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
     private static final Pattern MOVE_PATTERN = Pattern.compile("m\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)");
-    private static final Pattern KEY_PATTERN = Pattern.compile("k\\s+(\\d+)\\s+([du])");
+    private static final Pattern KEY_PATTERN = Pattern.compile("k\\s+(\\d+)\\s+([duo])");
     private static final Pattern WAIT_PATTERN = Pattern.compile("w\\s+(\\d+)");
     private static final Pattern UP_PATTERN = Pattern.compile("u\\s+(\\d+)");
     private static final Pattern COMMIT_PATTERN = Pattern.compile("c");
@@ -39,6 +39,9 @@ public class InputThread extends Thread {
                 while (!subqueue.offer(ControlMessage.createKeyUpEvent(keycode, 0, 0)));
             } else if (m.group(2).equals("d")) {
                 while (!subqueue.offer(ControlMessage.createKeyDownEvent(keycode, 0, 0)));
+            }else
+            {
+                while (!subqueue.offer(ControlMessage.createKeyEvent(keycode)));
             }
         }
     }
