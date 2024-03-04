@@ -106,6 +106,9 @@ public class InputThread extends Thread {
     }
 
     private void parseInput(String s) {
+        if (subqueue.isEmpty()) {
+            while(!subqueue.offer(ControlMessage.createWaitTimestampSyncEvent(System.currentTimeMillis())));
+        }
         switch (s.charAt(0)) {
             case 'c':
                 parseCommit(s);

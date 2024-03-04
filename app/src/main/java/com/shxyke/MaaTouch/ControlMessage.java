@@ -12,6 +12,7 @@ public final class ControlMessage {
     public static final int TYPE_EVENT_TOUCH_RESET = 4;
     public static final int TYPE_EVENT_KEY_DOWN = 5;
     public static final int TYPE_EVENT_KEY_UP = 6;
+    public static final int TYPE_EVENT_WAIT_TIMESTAMP_SYNC = 100;
 
     private int type;
     private long pointerId;
@@ -66,6 +67,12 @@ public final class ControlMessage {
 
     public static ControlMessage createWaitEvent(long milis) {
         ControlMessage msg = new ControlMessage(TYPE_EVENT_WAIT);
+        msg.millis = milis;
+        return msg;
+    }
+
+    public static ControlMessage createWaitTimestampSyncEvent(long milis) {
+        ControlMessage msg = new ControlMessage(TYPE_EVENT_WAIT_TIMESTAMP_SYNC);
         msg.millis = milis;
         return msg;
     }
