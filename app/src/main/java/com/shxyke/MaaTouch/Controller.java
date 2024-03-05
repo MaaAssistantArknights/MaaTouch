@@ -74,7 +74,7 @@ public class Controller {
 
         String currentClipboard = getClipboardText();
         if (currentClipboard != null && currentClipboard.equals(text)) {
-            return false;
+            return true;
         }
         return clipboardManager.setText(text);
     }
