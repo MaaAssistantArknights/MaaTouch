@@ -2,6 +2,9 @@ package com.shxyke.MaaTouch;
 
 import android.util.Log;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Log both to Android logger (so that logs are visible in "adb logcat") and standard output/error (so that they are visible in the terminal
  * directly).
@@ -53,7 +56,14 @@ public final class Ln {
     public static void i(String message) {
         if (isEnabled(Level.INFO)) {
             Log.i(TAG, message);
-            System.out.println(PREFIX + "INFO: " + message);
+            String info = "INFO: ";
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss ");
+                String formattedDateTime = now.format(formatter);
+                info = formattedDateTime + info;
+            }
+            System.out.println(PREFIX + info + message);
         }
     }
 

@@ -1,8 +1,10 @@
 package com.shxyke.MaaTouch;
 
+import com.shxyke.MaaTouch.wrappers.ClipboardManager;
 import com.shxyke.MaaTouch.wrappers.InputManager;
 import com.shxyke.MaaTouch.wrappers.ServiceManager;
 
+import android.os.Build;
 import android.os.SystemClock;
 import android.view.InputDevice;
 import android.view.InputEvent;
@@ -51,6 +53,41 @@ public class Controller {
             Pointer pointer = pointersState.get(0);
             this.injectTouch(MotionEvent.ACTION_UP, pointer.getId(), pointer.getPoint(), 0);
         }
+    }
+
+    public String getClipboardText() {
+        ClipboardManager clipboardManager = serviceManager.getClipboardManager();
+        if (clipboardManager == null) {
+            return null;
+        }
+        CharSequence s = clipboardManager.getText();
+        if (s == null) {
+            return null;
+        }
+        return s.toString();
+    }
+    public boolean setClipboardText(String text) {
+        ClipboardManager clipboardManager = serviceManager.getClipboardManager();
+        if (clipboardManager == null) {
+            return false;
+        }
+
+        String currentClipboard = getClipboardText();
+        if (currentClipboard != null && currentClipboard.equals(text)) {
+            return true;
+        }
+        return clipboardManager.setText(text);
+    }
+    public boolean pressReleaseKeycode(int keyCode) {
+        return injectKeyEvent(KeyEvent.ACTION_DOWN, keyCode, 0, 0)
+                && injectKeyEvent(KeyEvent.ACTION_UP, keyCode, 0, 0);
+    }
+    public boolean setClipboard(String text) {
+        boolean ok = setClipboardText(text);
+        if (ok && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            pressReleaseKeycode(KeyEvent.KEYCODE_PASTE);
+        }
+        return ok;
     }
 
     public boolean injectKeyDown(int keyCode, int repeat, int metaState) {
