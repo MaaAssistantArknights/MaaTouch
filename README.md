@@ -10,7 +10,7 @@ minitouch 输入协议的安卓原生实现
 
 - `c` 提交指令
 - `r` 重置触点指令
-- `d <id> <x> y pressure` 按下触点
+- `d id x y pressure` 按下触点
 - `m id x y pressure` 移动触点
 - `u id` 抬起触点
 - `w ms` 指令执行等待（不建议使用，推荐调用方自行延迟）
