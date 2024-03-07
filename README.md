@@ -1,75 +1,67 @@
-使用参考 [minitouch](https://github.com/DeviceFarmer/minitouch)
+# MaaTouch
 
-说明
+minitouch 输入协议的安卓原生实现
 
-c 提交指令
+## 使用说明
 
-r 重置触点指令
+参考 [minitouch usage](https://github.com/DeviceFarmer/minitouch#usage)
 
-d id x y pressure 按下触点
+### 指令一览
 
-m id x y pressure 移动触点
+- `c` 提交指令
+- `r` 重置触点指令
+- `d <id> <x> y pressure` 按下触点
+- `m id x y pressure` 移动触点
+- `u id` 抬起触点
+- `w ms` 指令执行等待（不建议使用，推荐调用方自行延迟）
+- `k key d` 按键按下
+- `k key u` 按键抬起
+- `k key o` 单次按键，按下抬起
+- `t text` 输入文本
 
-u id 抬起触点
+### 示例
 
-w ms 指令执行等待
+- 在 (10, 10) 点击
 
-k key d 按键按下
+  ```text
+  d 0 10 10 1
+  u 0
+  c
+  ```
 
-k key u 按键抬起
+- 滑动
 
-k key o 单次按键,按下抬起
+  ```text
+  d 0 10 10 1
+  w 100
+  m 0 20 20 1
+  w 100
+  m 0 30 30 1
+  w 100
+  u 0
+  c
+  ```
 
-t text 输入文本
+- 点亮屏幕
 
-示例:
+  ```text
+  k 224 o
+  c
+  ```
 
-1:在10 10点击
+- 删除文本框内容
 
-d 0 10 10 1
+  ```text
+  k 123 o
+  k 67 d
+  w 1000
+  k 67 u
+  c
+  ```
 
-u 0
+- 输入文本
 
-c
-
-2:滑动
-
-d 0 10 10 1
-
-w 100
-
-m 0 20 20 1
-
-w 100
-
-m 0 30 30 1
-
-w 100
-
-u 0
-
-c
-
-3: 点亮屏幕
-
-k 224 o
-
-c
-
-4:删除文本框内容
-
-k 123 o
-
-k 67 d
-
-w 1000
-
-k 67 u
-
-c
-
-5:输入文本
-
-t 内容
-
-c
+  ```text
+  t 内容
+  c
+  ```
